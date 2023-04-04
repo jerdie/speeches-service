@@ -1,0 +1,69 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.0.5'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
+}
+
+configurations {
+	asciidoctorExt
+}
+
+ext {
+	snippetsDir = file('build/generated-snippets')
+	springRestDocs = '3.0.0'
+}
+
+group = 'com.gerard'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	compileOnly 'org.projectlombok:lombok'
+	implementation "org.mapstruct:mapstruct:1.5.3.Final"
+	runtimeOnly 'com.h2database:h2'
+	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor "org.mapstruct:mapstruct-processor:1.5.3.Final"
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	asciidoctorExt "org.springframework.restdocs:spring-restdocs-asciidoctor:${springRestDocs}"
+	testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc:${springRestDocs}"
+}
+
+test {
+	outputs.dir snippetsDir
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	configurations 'asciidoctorExt'
+	dependsOn test
+}
+
+bootJar {
+	dependsOn asciidoctor
+	from ("build/docs/asciidoc") {
+		into 'static/docs'
+	}
+	copy {
+		from "build/docs/asciidoc"
+		into "src/docs/asciidoc"
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+

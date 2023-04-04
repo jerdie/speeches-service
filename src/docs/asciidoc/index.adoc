@@ -1,0 +1,24 @@
+= Speeches Service Docs
+Gerard;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+
+How to make a request using cURL:
+
+include::{snippets}/api/speeches/curl-request.adoc[]
+
+HTTP request:
+
+include::{snippets}/api/speeches/http-request.adoc[]
+
+HTTP response:
+
+include::{snippets}/api/speeches/http-response.adoc[]
+
+Response Body:
+include::{snippets}/api/speeches/response-body.adoc[]
+
+
+Response Fields:
+include::{snippets}/api/speeches/response-fields.adoc[]
